@@ -10,6 +10,7 @@ knitr::opts_chunk$set(echo = TRUE)
 Analysis of Lecture 3 data
 =========================
 Oct 15, 2018
+
 Jessica Gianopulos
 
 # Learn to manupulate Tidy Data via four new functions
@@ -44,6 +45,7 @@ data <- data %>%
 
 ### Use mutate to modify existing columns
 This set of code rounds the mean_ratio column to 2 digits
+
 NOTE: R has functions for almost all mathematical and statistical manipulation
 
 ```{r}
@@ -65,6 +67,7 @@ annotations <- read_tsv("../data/example_dataset_3.tsv") %>%
 
 ### inner_join keeps common rows
 Keep rows that are present in both and then it aligns the new columns
+
 NOTE: Don’t need to have the same number of rows in each data set
 ```{r}
 data %>%
@@ -74,6 +77,7 @@ data %>%
 
 ### left_join keeps all rows in left data frame
 Takes data frame on the right and joins it with data frame on the left
+
 Throws out rows only in the right data frame (annotations)
 
 ```{r}
@@ -84,6 +88,7 @@ data %>%
 
 ### right_join keeps all rows in right data frame
 Takes data frame on the left and joins it with data frame on the right
+
 Throws out rows only in the left data frame (data)
 
 ```{r}
