@@ -1,4 +1,4 @@
-# tfcb-homework2
+# Homework 2: Learning GitHub and Gitkraken
 
 This is homework 2 from TFCB
 
