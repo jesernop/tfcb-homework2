@@ -10,6 +10,7 @@ knitr::opts_chunk$set(echo = TRUE)
 Analysis of Lecture 3 data
 =========================
 Oct 15, 2018
+Jessica Gianopulos
 
 # Learn to manupulate Tidy Data via four new functions
 This document will explain how to use four new functions in the Tidyverse 
