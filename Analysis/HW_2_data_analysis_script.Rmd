@@ -1,0 +1,180 @@
+---
+title: "Homework 2"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Analysis of Lecture 3 data
+=========================
+Oct 15, 2018
+
+# Learn to manupulate Tidy Data via four new functions
+This document will explain how to use four new functions in the Tidyverse 
+package: mutate, join functions, summarize, group_by
+
+## Load Tidyverse 
+Run `library(tidverse)` to load the tidyverse library into RStudio
+
+```{r}
+library(tidyverse)
+```
+
+## Read in data file
+This is pulling the data file from a GitHub repository in the data directory
+
+```{r}
+data <- read_tsv("../data/example_dataset_2.tsv") %>% 
+  print()
+```
+
+## Mutate Function
+
+### Use mutate to create new columns
+`mean_ratio` is the title of your new column
+
+```{r}
+data <- data %>%
+  mutate(mean_ratio = mean_yfp / mean_rfp) %>%
+  print()
+```
+
+### Use mutate to modify existing columns
+This set of code rounds the mean_ratio column to 2 digits
+NOTE: R has functions for almost all mathematical and statistical manipulation
+
+```{r}
+data %>%
+  mutate(mean_ratio = round(mean_ratio, 2)) %>%
+  print()
+```
+
+## TYPE_join functions
+
+### Read in annotations file
+This second table of data is given the name annotations for reference in future 
+code
+
+```{r}
+annotations <- read_tsv("../data/example_dataset_3.tsv") %>%
+  print()
+```
+
+### inner_join keeps common rows
+Keep rows that are present in both and then it aligns the new columns
+NOTE: Don’t need to have the same number of rows in each data set
+```{r}
+data %>%
+  inner_join(annotations, by = "strain") %>%
+  print()
+```
+
+### left_join keeps all rows in left data frame
+Takes data frame on the right and joins it with data frame on the left
+Throws out rows only in the right data frame (annotations)
+
+```{r}
+data %>%
+  left_join(annotations, by = "strain") %>%
+  print()
+```
+
+### right_join keeps all rows in right data frame
+Takes data frame on the left and joins it with data frame on the right
+Throws out rows only in the left data frame (data)
+
+```{r}
+data %>%
+  right_join(annotations, by = "strain") %>%
+  print()
+```
+
+## Summarize Functions
+
+### Use sammarize to calculate stats across rows
+This outputs the max value of only what you ask
+
+```{r}
+data %>%
+  summarize(max_yfp = max(mean_yfp),
+            max_rfp = max(mean_rfp)) %>%
+  print()
+```
+
+Other examples of summary functions:
+min() mean() sd() first() n()
+
+## Group_by Function
+
+### Read in new file
+This file includes the replicate of each strain
+
+```{r}
+data <- read_tsv("../data/example_dataset_4.tsv") %>%
+  print(n = 10)
+```
+
+### Use group_by to group subsets of rows
+Subsets rows by the column you are interested in
+- Example: group by strain
+
+```{r}
+data %>%
+  group_by(strain) %>%
+  print(n = 10)
+```
+
+### group_by + summarize for statistics by group
+This will apply the summarize function to each one of the groups
+
+```{r}
+data %>%
+  group_by(strain) %>%
+  summarize(mean_yfp = mean(yfp), mean_rfp = mean(rfp)) %>%
+  print()
+```
+
+Add a standard error column by group
+
+```{r}
+data %>%
+  group_by(strain) %>%
+  summarize(mean_yfp = mean(yfp), 
+            mean_rfp = mean(rfp), 
+            se_yfp = sd(yfp) / sqrt(n()),
+            se_rfp = sd(rfp) / sqrt(n())) %>%
+  print()
+```
+
+## All Functions Combined
+
+### %>% enables complex data analysis piplines
+Makes an easy way to read how the data is combined and manipulated
+
+```{r}
+data %>%
+  group_by(strain) %>%
+  summarize(mean_yfp = mean(yfp), mean_rfp = mean(rfp)) %>%
+  mutate(mean_ratio = mean_yfp / mean_rfp) %>%
+  left_join(annotations, by = "strain") %>%
+  print()
+```
+
+### %>% and + if you want to plot
+
+```{r}
+data %>%
+  group_by(strain) %>%
+  summarize(mean_yfp = mean(yfp), mean_rfp = mean(rfp)) %>%
+  mutate(mean_ratio = mean_yfp / mean_rfp) %>%
+  left_join(annotations, by = "strain") %>%
+  ggplot(aes(x = kozak_region, y = mean_ratio,
+             color = insert_sequence, group = insert_sequence)) +
+  geom_line() +
+  geom_point()
+```
+
+Now you can use all of these Tidyverse functions on your own.
+Good Luck
